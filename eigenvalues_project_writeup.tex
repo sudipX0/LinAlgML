@@ -1,0 +1,347 @@
+\documentclass[12pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Code listing settings
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true,
+    captionpos=b
+}
+
+% Title information
+\title{\textbf{Eigenvalues and Eigenvectors: Analysis and Applications}\\
+\large An Exploration Through Linear Transformations and Web Page Navigation Modeling}
+\author{Sudeep}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This project explores the fundamental concepts of eigenvalues and eigenvectors through the lens of linear transformations in two-dimensional space. We investigate various standard transformations including reflections, shears, rotations, scaling, and projections, analyzing their eigenstructure and geometric interpretation. Furthermore, we demonstrate a practical application of eigenvalue analysis in modeling web page navigation using discrete dynamical systems and Markov matrices. The project combines theoretical understanding with computational implementation using Python's NumPy library, providing both mathematical insights and practical problem-solving capabilities.
+\end{abstract}
+
+\section{Introduction}
+
+Linear transformations are fundamental operations in mathematics, physics, and engineering, representing how vectors in space are mapped to other vectors. Among the most important properties of a linear transformation are its eigenvalues and eigenvectors, which reveal the directions along which the transformation acts as simple scaling.
+
+For a square matrix $A$ and a non-zero vector $\mathbf{v}$, if the relationship
+\begin{equation}
+A\mathbf{v} = \lambda \mathbf{v}
+\end{equation}
+holds for some scalar $\lambda$, then $\mathbf{v}$ is called an \textbf{eigenvector} of $A$, and $\lambda$ is the corresponding \textbf{eigenvalue}. This property indicates that the transformation $A$ scales the vector $\mathbf{v}$ by a factor of $\lambda$ without changing its direction (except possibly reversing it if $\lambda < 0$).
+
+This project aims to:
+\begin{itemize}
+    \item Understand eigenvalues and eigenvectors through geometric visualization
+    \item Analyze standard linear transformations in $\mathbb{R}^2$
+    \item Apply eigenvalue analysis to model real-world problems
+    \item Implement computational methods using Python
+\end{itemize}
+
+\section{Theoretical Background}
+
+\subsection{Definition and Properties}
+
+Let $A$ be an $n \times n$ matrix. A non-zero vector $\mathbf{v} \in \mathbb{R}^n$ is an eigenvector of $A$ if there exists a scalar $\lambda$ such that:
+\begin{equation}
+A\mathbf{v} = \lambda \mathbf{v}
+\end{equation}
+
+The scalar $\lambda$ is called an eigenvalue of $A$. An important property is that if $\mathbf{v}$ is an eigenvector with eigenvalue $\lambda$, then any non-zero scalar multiple $k\mathbf{v}$ ($k \neq 0$) is also an eigenvector with the same eigenvalue:
+\begin{equation}
+A(k\mathbf{v}) = k(A\mathbf{v}) = k\lambda\mathbf{v} = \lambda(k\mathbf{v})
+\end{equation}
+
+Geometrically, in $\mathbb{R}^2$, this means that all eigenvectors corresponding to one eigenvalue lie on the same straight line through the origin.
+
+\subsection{Computing Eigenvalues and Eigenvectors}
+
+To find eigenvalues, we solve the characteristic equation:
+\begin{equation}
+\det(A - \lambda I) = 0
+\end{equation}
+where $I$ is the identity matrix. Once eigenvalues are found, corresponding eigenvectors are determined by solving:
+\begin{equation}
+(A - \lambda I)\mathbf{v} = \mathbf{0}
+\end{equation}
+
+\section{Methodology}
+
+\subsection{Computational Implementation}
+
+We implemented our analysis using Python with the NumPy library. The core function for computing eigenvalues and eigenvectors is \texttt{np.linalg.eig()}, which returns:
+\begin{itemize}
+    \item A vector containing all eigenvalues
+    \item A matrix where each column is a normalized eigenvector (with norm 1)
+\end{itemize}
+
+\subsection{Visualization}
+
+To understand the geometric interpretation of linear transformations, we developed a visualization function that:
+\begin{enumerate}
+    \item Plots original basis vectors or eigenvectors
+    \item Shows the transformed vectors after applying the matrix transformation
+    \item Displays both sets of vectors on the same coordinate system
+\end{enumerate}
+
+This approach allows us to observe how transformations affect different vectors and verify that eigenvectors maintain their direction under transformation.
+
+\section{Analysis of Standard Transformations}
+
+Before analyzing specific transformations, let's visualize how a basic linear transformation affects standard basis vectors versus eigenvectors.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/basic_transformation.png}
+        \caption{Transformation of standard basis vectors}
+        \label{fig:basic_transform}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/eigenvector_transformation.png}
+        \caption{Transformation of eigenvectors}
+        \label{fig:eigen_transform}
+    \end{subfigure}
+    \caption{Linear transformation $A = \begin{bmatrix}2 & 3 \\ 2 & 1\end{bmatrix}$ applied to (a) standard basis vectors and (b) eigenvectors. Blue vectors represent original vectors, orange vectors represent transformed vectors.}
+    \label{fig:transform_comparison}
+\end{figure}
+
+Figure \ref{fig:transform_comparison} illustrates a key insight: while standard basis vectors change both magnitude and direction under transformation, eigenvectors maintain their direction (only their magnitude changes by the eigenvalue factor).
+
+\subsection{Reflection about y-axis}
+
+The transformation matrix for reflection about the y-axis is:
+\begin{equation}
+A_{\text{reflection}} = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}
+\end{equation}
+
+\textbf{Eigenvalues:} $\lambda_1 = -1$, $\lambda_2 = 1$
+
+\textbf{Eigenvectors:} The eigenvector corresponding to $\lambda_1 = -1$ points in the x-direction (gets reversed), while the eigenvector for $\lambda_2 = 1$ points in the y-direction (remains unchanged).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/reflection_transformation.png}
+    \caption{Reflection about y-axis transformation with eigenvectors. The horizontal eigenvector (eigenvalue $-1$) is reversed, while the vertical eigenvector (eigenvalue $1$) remains unchanged.}
+    \label{fig:reflection}
+\end{figure}
+
+\textbf{Interpretation:} This transformation has two distinct eigenvalues, reflecting the fact that vectors along the y-axis are unchanged ($\lambda = 1$) while vectors along the x-axis are reflected ($\lambda = -1$). Figure \ref{fig:reflection} clearly shows this behavior.
+
+\subsection{Shear in x-direction}
+
+The shear transformation with scalar 0.5 is represented by:
+\begin{equation}
+A_{\text{shear}} = \begin{bmatrix} 1 & 0.5 \\ 0 & 1 \end{bmatrix}
+\end{equation}
+
+\textbf{Eigenvalues:} $\lambda_1 = \lambda_2 = 1$ (repeated eigenvalue)
+
+\textbf{Eigenvectors:} Only one independent eigenvector exists, pointing in the x-direction.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/shear_transformation.png}
+    \caption{Shear transformation in x-direction. Only one eigenvector exists (horizontal direction with eigenvalue $1$). The other vector shown is not an eigenvector—it changes direction under the transformation.}
+    \label{fig:shear}
+\end{figure}
+
+\textbf{Interpretation:} The shear transformation has only one eigenvector. Vectors in the x-direction remain unchanged, while all other vectors are sheared. This is an example of a $2 \times 2$ matrix with a repeated eigenvalue but only one linearly independent eigenvector, making it non-diagonalizable. Figure \ref{fig:shear} demonstrates this unique behavior.
+
+\subsection{Rotation}
+
+A 90-degree clockwise rotation is given by:
+\begin{equation}
+A_{\text{rotation}} = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}
+\end{equation}
+
+\textbf{Eigenvalues:} $\lambda_1 = i$, $\lambda_2 = -i$ (complex eigenvalues)
+
+\textbf{Interpretation:} There are no real eigenvalues for this transformation. This makes geometric sense: a 90-degree rotation changes the direction of every non-zero vector in $\mathbb{R}^2$, so no real vector maintains its direction under this transformation.
+
+\subsection{Identity Matrix and Uniform Scaling}
+
+The identity matrix:
+\begin{equation}
+A_{\text{identity}} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+\end{equation}
+
+\textbf{Eigenvalues:} $\lambda_1 = \lambda_2 = 1$
+
+\textbf{Eigenvectors:} Every non-zero vector in $\mathbb{R}^2$ is an eigenvector.
+
+\textbf{Interpretation:} The identity matrix leaves all vectors unchanged. Similarly, uniform scaling matrices of the form $\begin{bmatrix} k & 0 \\ 0 & k \end{bmatrix}$ have all vectors as eigenvectors with eigenvalue $k$.
+
+\subsection{Projection onto x-axis}
+
+The projection transformation:
+\begin{equation}
+A_{\text{projection}} = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}
+\end{equation}
+
+\textbf{Eigenvalues:} $\lambda_1 = 1$, $\lambda_2 = 0$
+
+\textbf{Interpretation:} One eigenvalue is zero, which is perfectly valid. The eigenvector for $\lambda = 1$ points in the x-direction (unchanged by projection), while the eigenvector for $\lambda = 0$ points in the y-direction (collapsed to the origin).
+
+\section{Application: Web Page Navigation Model}
+
+\subsection{Discrete Dynamical Systems}
+
+A discrete dynamical system models processes that evolve in discrete time steps. If $\mathbf{X}_t$ represents the state at time $t$, the evolution is governed by:
+\begin{equation}
+\mathbf{X}_t = P\mathbf{X}_{t-1}
+\end{equation}
+where $P$ is a transformation matrix. This leads to:
+\begin{equation}
+\mathbf{X}_t = P^t\mathbf{X}_0
+\end{equation}
+
+\subsection{Markov Matrices}
+
+A \textbf{Markov matrix} (or stochastic matrix) is a square matrix where:
+\begin{itemize}
+    \item All entries are non-negative
+    \item The sum of each column equals 1
+\end{itemize}
+
+Markov matrices have the important property that they always have an eigenvalue equal to 1.
+
+\subsection{Web Navigation Model}
+
+We model web page navigation as a discrete dynamical system where:
+\begin{itemize}
+    \item State vector $\mathbf{X}_t$ represents the probability distribution of being at each page at time $t$
+    \item Transition matrix $P$ has entries $p_{ij}$ representing the probability of navigating to page $i$ from page $j$
+\end{itemize}
+
+For our 5-page model, we constructed:
+\begin{equation}
+P = \begin{bmatrix}
+0 & 0.75 & 0.35 & 0.25 & 0.85 \\
+0.15 & 0 & 0.35 & 0.25 & 0.05 \\
+0.15 & 0.15 & 0 & 0.25 & 0.05 \\
+0.15 & 0.05 & 0.05 & 0 & 0.05 \\
+0.55 & 0.05 & 0.25 & 0.25 & 0
+\end{bmatrix}
+\end{equation}
+
+\subsection{Steady-State Analysis}
+
+To find the long-term behavior (steady state), we seek a vector $\mathbf{X}_{\infty}$ such that:
+\begin{equation}
+P\mathbf{X}_{\infty} = \mathbf{X}_{\infty}
+\end{equation}
+
+This is precisely the eigenvector equation with eigenvalue $\lambda = 1$! Instead of computing $P^t$ for large $t$, we can:
+\begin{enumerate}
+    \item Find the eigenvector corresponding to eigenvalue 1
+    \item Normalize it so entries sum to 1 (to represent probabilities)
+\end{enumerate}
+
+This approach dramatically reduces computational complexity, especially for large systems.
+
+\subsection{Connection to PageRank}
+
+This type of model forms the foundation of Google's PageRank algorithm. In PageRank:
+\begin{itemize}
+    \item Web pages are nodes in a graph
+    \item Links between pages define transitions
+    \item The steady-state distribution indicates page importance
+\end{itemize}
+
+The eigenvalue approach allows efficient computation of page rankings for billions of web pages.
+
+\section{Results and Discussion}
+
+\subsection{Key Findings}
+
+\begin{enumerate}
+    \item \textbf{Existence of Eigenvectors:} Not all $2 \times 2$ matrices have two linearly independent eigenvectors in $\mathbb{R}^2$:
+    \begin{itemize}
+        \item Reflections have two distinct eigenvectors
+        \item Shears have only one eigenvector
+        \item Rotations have no real eigenvectors
+        \item Identity and uniform scaling have infinitely many eigenvectors
+    \end{itemize}
+    
+    \item \textbf{Zero Eigenvalues:} Zero is a valid eigenvalue (as in projection matrices), indicating that some vectors are mapped to the zero vector.
+    
+    \item \textbf{Computational Efficiency:} For the web navigation problem, using eigenvalue analysis reduces the computation from $O(t \cdot n^3)$ for computing $P^t$ iteratively to $O(n^3)$ for a single eigenvalue computation.
+    
+    \item \textbf{Steady-State Convergence:} The web navigation model converges to a steady state that can be predicted using the eigenvector for $\lambda = 1$, verified through direct multiplication: $P\mathbf{X}_{\infty} = \mathbf{X}_{\infty}$.
+\end{enumerate}
+
+\subsection{Limitations and Considerations}
+
+\begin{itemize}
+    \item Software limitations: Functions like \texttt{np.linalg.eig()} return only a basis of eigenvectors, not the entire eigenspace when it's higher-dimensional.
+    
+    \item Numerical precision: Eigenvalue computations are subject to floating-point errors, which we handle using tolerance parameters (e.g., \texttt{rtol=1e-10} in comparisons).
+    
+    \item Model assumptions: The web navigation model assumes random link-following without considering factors like back buttons, bookmarks, or user preferences.
+\end{itemize}
+
+\section{Conclusion}
+
+This project demonstrates both the theoretical elegance and practical utility of eigenvalue analysis. Through geometric visualization of linear transformations, we gained intuitive understanding of how eigenvectors represent invariant directions under transformation. The variety of behaviors observed—from matrices with no real eigenvectors to those where every vector is an eigenvector—illustrates the rich structure of linear algebra.
+
+The web navigation application showcases how eigenvalue theory translates abstract mathematics into real-world problem-solving. By recognizing that steady-state problems correspond to eigenvector equations, we can efficiently solve complex systems that would otherwise require intensive iterative computation.
+
+Key takeaways:
+\begin{itemize}
+    \item Eigenvalues and eigenvectors provide deep insights into the nature of linear transformations
+    \item Geometric visualization helps build intuition for abstract concepts
+    \item Eigenvalue methods offer computational advantages in applications like PageRank
+    \item Understanding mathematical foundations is crucial for effective use of computational tools
+\end{itemize}
+
+This project reinforces the importance of connecting theory with implementation, using computational tools not as black boxes but as means to explore and verify mathematical concepts.
+
+\section{Code Availability}
+
+The complete implementation, including visualization functions and analysis code, is available in the accompanying Jupyter notebook: \texttt{Webpage Navigation Model \& PCA.ipynb}
+
+\section*{Acknowledgments}
+
+This project was developed as an exploration of eigenvalue theory and its applications, combining mathematical analysis with computational implementation using Python and NumPy.
+
+\begin{thebibliography}{9}
+
+\bibitem{strang2016}
+Strang, G. (2016). \textit{Introduction to Linear Algebra} (5th ed.). Wellesley-Cambridge Press.
+
+\bibitem{lay2015}
+Lay, D. C., Lay, S. R., \& McDonald, J. J. (2015). \textit{Linear Algebra and Its Applications} (5th ed.). Pearson.
+
+\bibitem{pagerank}
+Page, L., Brin, S., Motwani, R., \& Winograd, T. (1999). The PageRank Citation Ranking: Bringing Order to the Web. Technical Report, Stanford InfoLab.
+
+\bibitem{numpy}
+Harris, C. R., et al. (2020). Array programming with NumPy. \textit{Nature}, 585(7825), 357-362.
+
+\end{thebibliography}
+
+\end{document}
